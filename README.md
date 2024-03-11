@@ -39,17 +39,29 @@ You are expected to have error handling, security, good code structure, accessib
 
 ## Our suggestion for those without any ideas
 
-The "LNU Fishing Club" needs an API to collect fishing reports. They are thinking of building a client application but want a separate web API before taking this process along. The idea is that anglers should report their catch and make this data public. They want to collect data like:
+Develop a **Beehive Monitoring REST API** forthe IoT Lab in Kalmar. 
 
-* The user who catches the fish
-* The position (longitude and latitude) of the catch
-* The name of the lake/river
-* The city of the fishing spot
-* The specie of the fish
-* Weight
-* Length
-* Image-URL
-* Timestamp of the catch
+Design a REST API that comprehensively monitors mobile beehive platforms. The API should provide authenticated access to the reported honeybee data and capture requests for mobile platform transport.
+You can use this dataset to mock some of the real-life sensor data for the API to fetch: [Beehive metrics on Kaggle](https://www.kaggle.com/datasets/se18m502/bee-hive-metrics/data).
+
+The API should handle requests to get the following data:
+* Hive Status 
+Returns current status values (location, humidity, weight and temperature) for a given beehive (by id)
+* Hive Humidity
+Provides humidity data for a specific hive over a given period
+* Hive Weight
+Fetches weight data for a specific hive for a given period
+* Hive Temperature
+Retrieves temperature data of a specific hive over a selected timeframe
+* Hive Arrival & Departure Flow
+Fetches the number of bee arrivals and departures from a specific hive within a selected timeframe
+
+The API should handle the following requests to save data: 
+* IoT Lab admins and farmers can register a new beehive or delete an existing one
+*  IoT Lab admins and farmers can update beehive information (location, name)
+* Farmers can request a mobile platform for their fields by specifing date and location that they 
+want to get the hive to. 
+* Farmers can report how much honey they have harvested on a certain date. 
 
 To do unsafe HTTP calls, the API MUST have Authentication/Authorization. A user should be able to sign in through the API safely (see requirements).
 
@@ -73,9 +85,26 @@ The following questions **MUST** be answered in the report.
 6. Which "linguistic design rules" have you implemented? List them here and motivate "for each" of them very briefly why did you choose them? Remember that you must consider "at least" FIVE "linguistic design rules" as the linguistic quality of your API.
 7. Did you do something extra besides the fundamental requirements? Explain them.
 
-## doumentation.md
+## Documentation
 
-**Do not miss it!** A markdaown document named "documentation.md" where you will list your resource URIs and their corresponding brief descriptions. If you have a URI being used with multiple HTTP methods, you need to describe each pair of **HTTP METHOD: URI** separately. For example, if you have a resource URI as www.example.com/fish/types and you have HTTP methods GET, PUT, POST, and DELETE to perform something on that resource, you need to describe each pair of Method and URI briefly, e.g., what GET www.example.com/fish/types does, what PUT www.example.com/fish/types does, what DELETE www.example.com/fish/types does, and so on.
+**Do not miss it!** This project requires you to produce comprehensive Swagger/OpenAPI documentation for your API. This is important, as having well-documented APIs can aid other developers in understanding how your services work.
+
+Swagger/OpenAPI tools can generate documentation automatically from your code comments and docstrings. It's important to include relevant information about each endpoint and HTTP method in the comments to make the auto-generated documentation useful.
+
+For instance, if you have a resource URI like www.example.com/beehives/{id} and it supports the GET, PUT, POST, and DELETE HTTP methods, you should provide comments for each method in your code. 
+
+Here's how it could look like:
+
+* For GET www.example.com/beehives/{id} : Include a comment in your code explaining that this method is used to retrieve information about a specific beehive.
+
+* For PUT www.example.com/beehives/{id} : Add a comment that this method allows users to update information for a specific beehive.
+
+* For POST www.example.com/beehives/{id} : State in a comment that this method is designed for users to add new data for a specific beehive. 
+
+* For DELETE www.example.com/beehives/{id} : Specify in a comment that this method gives users the ability to delete specific records of a beehive.
+
+With proper comments for each endpoint and method, Swagger/OpenAPI can generate an interactive and user-friendly documentation that developers can use to understand and navigate your API’s resources. Moreover, it provides the possibility to test API calls directly from the browser.
+
 
 ## Examination
 
