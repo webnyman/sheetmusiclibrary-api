@@ -39,28 +39,24 @@ You are expected to have error handling, security, good code structure, accessib
 
 ## Our suggestion for those without any ideas
 
-Develop a **Beehive Monitoring REST API** forthe IoT Lab in Kalmar. 
+Develop a **Beehive Monitoring REST API** for the IoT Lab in Kalmar. 
 
 Design a REST API that comprehensively monitors mobile beehive platforms. The API should provide authenticated access to the reported honeybee data and capture requests for mobile platform transport.
 You can use this dataset to mock some of the real-life sensor data for the API to fetch: [Beehive metrics on Kaggle](https://www.kaggle.com/datasets/se18m502/bee-hive-metrics/data).
 
 The API should handle requests to get the following data:
-* Hive Status 
-Returns current status values (location, humidity, weight and temperature) for a given beehive (by id)
-* Hive Humidity
-Provides humidity data for a specific hive over a given period
-* Hive Weight
-Fetches weight data for a specific hive for a given period
-* Hive Temperature
-Retrieves temperature data of a specific hive over a selected timeframe
-* Hive Arrival & Departure Flow
-Fetches the number of bee arrivals and departures from a specific hive within a selected timeframe
 
-The API should handle the following requests to save data: 
+* Hive Status: Returns current status values (location, humidity, weight and temperature) for a given beehive (by id)
+* Hive Humidity: Provides humidity data for a specific hive over a given period
+* Hive Weight: Fetches weight data for a specific hive for a given period
+* Hive Temperature: Retrieves temperature data of a specific hive over a selected timeframe
+* Hive Arrival & Departure Flow: Fetches the number of bee arrivals and departures from a specific hive within a selected timeframe
+
+The API should handle the following requests to save data:
+
 * IoT Lab admins and farmers can register a new beehive or delete an existing one
 *  IoT Lab admins and farmers can update beehive information (location, name)
-* Farmers can request a mobile platform for their fields by specifing date and location that they 
-want to get the hive to. 
+* Farmers can request a mobile platform for their fields by specifing date and location that they want to get the hive to. 
 * Farmers can report how much honey they have harvested on a certain date. 
 
 To do unsafe HTTP calls, the API MUST have Authentication/Authorization. A user should be able to sign in through the API safely (see requirements).
