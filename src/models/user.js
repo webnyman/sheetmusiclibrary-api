@@ -98,5 +98,28 @@ schema.statics.authenticate = async function (username, password) {
   return user
 }
 
+/**
+ * Updates a user's password.
+ *
+ * @param {string} newPassword - The password to update.
+ * @returns {Promise<User>} ...
+ */
+schema.methods.updatePassword = async function (newPassword) {
+  this.password = newPassword
+  await this.save()
+}
+/**
+ * Compares a candidate password with the user's password.
+ *
+ * @param {string} candidatePassword - The password to compare.
+ * @returns {Promise<boolean>} ...
+ */
+schema.methods.comparePassword = async function (candidatePassword) {
+  const isCorrect = await bcrypt.compare(candidatePassword, this?.password)
+  console.log(candidatePassword)
+  console.log(isCorrect)
+  return isCorrect
+}
+
 // Create a model using the schema.
 export const User = mongoose.model('User', schema)

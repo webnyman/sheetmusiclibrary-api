@@ -33,7 +33,8 @@ export class AccountController {
       )
 
       const tokenData = {
-        id: user.id
+        id: user.id,
+        username: user.username
       }
 
       // Create the access token
@@ -187,11 +188,12 @@ export class AccountController {
   authenticate = async (req, res, next) => {
     try {
       const token = req.headers.authorization.split(' ')[1]
-      console.log(token)
       const privateKey = Buffer.from(process.env.PRIVATE_KEY_64, 'base64').toString('utf-8')
       const decoded = jwt.verify(token, privateKey)
-      req.user = { id: decoded.id }
-      console.log(req.user)
+      req.user = {
+        id: decoded.id,
+        username: decoded.username
+      }
       next()
     } catch (error) {
       console.error(error)
@@ -209,8 +211,6 @@ export class AccountController {
    */
   viewProfile = async (req, res, next) => {
     try {
-      const userId = req.user.id
-      console.log(userId)
       req.user = await User.findById(req.user.id)
       console.log(req.user)
       res.status(200).json({
@@ -218,8 +218,38 @@ export class AccountController {
         links: this.#generateHATEOASLinks(req.user.id, 'loggedIn')
       })
     } catch (error) {
-      console.error(error)
       next(createError(500, 'An unexpected condition was encountered.'))
+    }
+  }
+
+  /**
+   * Updates the user's password.
+   *
+   * @param {*} req - Express request object.
+   * @param {*} res - Express response object.
+   * @param {*} next - Express next middleware function.
+   * @memberof AccountController
+   */
+  updatePassword = async (req, res, next) => {
+    try {
+      const userId = req.user.id
+      const username = req.user.username
+      const { currentPassword, newPassword } = req.body
+      const user = await User.findOne({ username })
+      console.log(user, currentPassword, newPassword)
+      if (!user || !(await user.comparePassword(currentPassword))) {
+        return res.status(401).json({
+          message: 'Current password is incorrect.',
+          links: this.#generateHATEOASLinks(userId, 'loggedIn')
+        })
+      }
+      await user.updatePassword(newPassword)
+      return res.status(200).json({
+        message: 'Password updated successfully.',
+        links: this.#generateHATEOASLinks(userId, 'loggedIn')
+      })
+    } catch (error) {
+      next(error)
     }
   }
 }
