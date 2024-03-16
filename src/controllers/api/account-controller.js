@@ -175,4 +175,51 @@ export class AccountController {
 
     return links
   }
+
+  /**
+   * Authenticates a user.
+   *
+   * @param {*} req - Express request object.
+   * @param {*} res - Express response object.
+   * @param {*} next - Express next middleware function.
+   * @memberof AccountController
+   */
+  authenticate = async (req, res, next) => {
+    try {
+      const token = req.headers.authorization.split(' ')[1]
+      console.log(token)
+      const privateKey = Buffer.from(process.env.PRIVATE_KEY_64, 'base64').toString('utf-8')
+      const decoded = jwt.verify(token, privateKey)
+      req.user = { id: decoded.id }
+      console.log(req.user)
+      next()
+    } catch (error) {
+      console.error(error)
+      next(createError(401, 'Unauthorized'))
+    }
+  }
+
+  /**
+   * Gets the user's profile.
+   *
+   * @param {*} req - Express request object.
+   * @param {*} res - Express response object.
+   * @param {*} next - Express next middleware function.
+   * @memberof AccountController
+   */
+  viewProfile = async (req, res, next) => {
+    try {
+      const userId = req.user.id
+      console.log(userId)
+      req.user = await User.findById(req.user.id)
+      console.log(req.user)
+      res.status(200).json({
+        user: req.user,
+        links: this.#generateHATEOASLinks(req.user.id, 'loggedIn')
+      })
+    } catch (error) {
+      console.error(error)
+      next(createError(500, 'An unexpected condition was encountered.'))
+    }
+  }
 }

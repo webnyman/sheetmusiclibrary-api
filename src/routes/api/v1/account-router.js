@@ -19,3 +19,6 @@ router.post('/login', (req, res, next) => controller.login(req, res, next))
 
 // Register
 router.post('/register', (req, res, next) => controller.register(req, res, next))
+
+// View profile
+router.get('/profile', controller.authenticate, (req, res, next) => controller.viewProfile(req, res, next))
