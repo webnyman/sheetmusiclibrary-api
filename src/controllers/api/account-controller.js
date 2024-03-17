@@ -211,11 +211,11 @@ export class AccountController {
    */
   viewProfile = async (req, res, next) => {
     try {
-      req.user = await User.findById(req.user.id)
+      req.user = await User.findById(req.params.id)
       console.log(req.user)
       res.status(200).json({
         user: req.user,
-        links: this.#generateHATEOASLinks(req.user.id, 'loggedIn')
+        links: this.#generateHATEOASLinks(req.params.id, 'loggedIn')
       })
     } catch (error) {
       next(createError(500, 'An unexpected condition was encountered.'))
@@ -232,7 +232,7 @@ export class AccountController {
    */
   updatePassword = async (req, res, next) => {
     try {
-      const userId = req.user.id
+      const userId = req.params.id
       const username = req.user.username
       const { currentPassword, newPassword } = req.body
       const user = await User.findOne({ username })

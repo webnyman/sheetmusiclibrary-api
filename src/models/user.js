@@ -116,8 +116,6 @@ schema.methods.updatePassword = async function (newPassword) {
  */
 schema.methods.comparePassword = async function (candidatePassword) {
   const isCorrect = await bcrypt.compare(candidatePassword, this?.password)
-  console.log(candidatePassword)
-  console.log(isCorrect)
   return isCorrect
 }
 
