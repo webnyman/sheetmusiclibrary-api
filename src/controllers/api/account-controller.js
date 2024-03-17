@@ -212,7 +212,6 @@ export class AccountController {
   viewProfile = async (req, res, next) => {
     try {
       req.user = await User.findById(req.params.id)
-      console.log(req.user)
       res.status(200).json({
         user: req.user,
         links: this.#generateHATEOASLinks(req.params.id, 'loggedIn')
