@@ -236,7 +236,6 @@ export class AccountController {
       const username = req.user.username
       const { currentPassword, newPassword } = req.body
       const user = await User.findOne({ username })
-      console.log(user, currentPassword, newPassword)
       if (!user || !(await user.comparePassword(currentPassword))) {
         return res.status(401).json({
           message: 'Current password is incorrect.',
@@ -246,6 +245,30 @@ export class AccountController {
       await user.updatePassword(newPassword)
       return res.status(200).json({
         message: 'Password updated successfully.',
+        links: this.#generateHATEOASLinks(userId, 'loggedIn')
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  /**
+   * Updates the user's email.
+   *
+   * @param {*} req - Express request object.
+   * @param {*} res - Express response object.
+   * @param {*} next - Express next middleware function.
+   * @memberof AccountController
+   */
+  updateEmail = async (req, res, next) => {
+    try {
+      const userId = req.params.id
+      const username = req.user.username
+      const newEmail = req.body.email
+      const user = await User.findOne({ username })
+      await user.updateEmail(newEmail)
+      return res.status(200).json({
+        message: 'Email updated successfully.',
         links: this.#generateHATEOASLinks(userId, 'loggedIn')
       })
     } catch (error) {

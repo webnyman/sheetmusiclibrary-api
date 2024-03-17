@@ -108,6 +108,17 @@ schema.methods.updatePassword = async function (newPassword) {
   this.password = newPassword
   await this.save()
 }
+
+/**
+ * Updates a user's email.
+ *
+ * @param {string} newEmail - The password to update.
+ * @returns {Promise<User>} ...
+ */
+schema.methods.updateEmail = async function (newEmail) {
+  this.email = newEmail
+  await this.save()
+}
 /**
  * Compares a candidate password with the user's password.
  *
