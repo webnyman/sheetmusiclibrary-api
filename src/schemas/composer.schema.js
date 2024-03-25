@@ -29,4 +29,19 @@ composerSchema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`
 })
 
+/**
+ * Updates a composer.
+ * @param {object} composer - The composer object to update.
+ */
+composerSchema.methods.updateComposer = async function (composer) {
+  Object.keys(composer).forEach(key => {
+    this[key] = composer[key]
+  })
+  try {
+    await this.save()
+    return this
+  } catch (error) {
+    throw new Error('Error updating composer.')
+  }
+}
 export default composerSchema

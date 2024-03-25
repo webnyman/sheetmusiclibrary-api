@@ -98,6 +98,33 @@ export class ComposerController {
   }
 
   /**
+   * Updates the composer's information in the database.
+   *
+   * @param {*} req - Express request object.
+   * @param {*} res - Express response object.
+   * @param {*} next - Express next middleware function.
+   * @memberof AccountController
+   */
+  updateComposer = async (req, res, next) => {
+    const composerId = req.params.id
+    const updateData = req.body
+    try {
+      const composer = await Composer.findById(composerId)
+      if (!composer) {
+        return next(createError(404, 'Composer not found.'))
+      }
+      const updatedComposer = await composer.updateComposer(updateData)
+      return res.status(200).json({
+        message: 'Composer updated successfully.',
+        composer: updatedComposer,
+        links: this.#generateHATEOASLinks(composerId)
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  /**
    * Generates HATEOAS links for a composer resource.
    * @param {string} composerId - The composer's ID.
    * @returns {Array} - An array of link objects related to the composer.
@@ -112,7 +139,7 @@ export class ComposerController {
       },
       {
         rel: 'update',
-        method: 'PATCH',
+        method: 'PUT',
         href: `${baseUrl}/composers/${composerId}/update`
       },
       {
