@@ -59,5 +59,20 @@ library.pre('save', async function (next) {
     next()
   }
 })
+/**
+ * Updates a post in library .
+ * @param {object} music - The composer object to update.
+ */
+library.methods.updateMusic = async function (music) {
+  Object.keys(music).forEach(key => {
+    this[key] = music[key]
+  })
+  try {
+    await this.save()
+    return this
+  } catch (error) {
+    throw new Error('Error updating composer.')
+  }
+}
 
 export default library
