@@ -29,4 +29,4 @@ composerSchema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`
 })
 
-export const Composer = mongoose.model('Composer', composerSchema)
+export default composerSchema

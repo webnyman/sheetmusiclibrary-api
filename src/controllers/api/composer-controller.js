@@ -1,4 +1,4 @@
-import Composer from '../../models/composer.model'
+import Composer from '../../models/composer.model.js'
 import createError from 'http-errors'
 
 /**
@@ -17,7 +17,12 @@ export class ComposerController {
     try {
       const composer = new Composer({ ...req.body })
       await composer.save()
-      res.status(201).json(composer)
+      res.status(201).json(
+        {
+          composer,
+          links: this.#generateHATEOASLinks(composer._id)
+        }
+      )
     } catch (error) {
       next(createError(400, 'Invalid composer data.'))
     }
@@ -54,9 +59,41 @@ export class ComposerController {
       if (!composer) {
         return next(createError(404, 'Composer not found.'))
       }
-      res.status(200).json(composer)
+      res.status(200).json({
+        composer,
+        links: this.#generateHATEOASLinks(composer._id)
+      })
     } catch (error) {
       next(createError(500, 'Server error retrieving composer.'))
+    }
+  }
+
+  /**
+   * Delete a composer by ID from the database.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   * @returns {Promise<void>} - A Promise that resolves when the login operation is complete.
+   */
+  async deleteComposer (req, res, next) {
+    try {
+      const composer = await Composer.findByIdAndDelete(req.params.id)
+      if (!composer) {
+        return next(createError(404, 'Composer not found.'))
+      }
+      res.status(204).send({
+        message: 'Composer deleted successfully.',
+        links: [
+          {
+            rel: 'all-composers',
+            method: 'GET',
+            href: '/composers'
+          }
+        ]
+      })
+    } catch (error) {
+      next(createError(500, 'Server error deleting composer.'))
     }
   }
 

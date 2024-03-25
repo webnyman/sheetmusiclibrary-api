@@ -162,43 +162,18 @@ export class AccountController {
         },
         {
           rel: 'updatePassword',
-          method: 'PATCH',
+          method: 'PUT',
           href: `${baseUrl}/user/${userId}/password`
         },
         {
           rel: 'updateEmail',
-          method: 'PATCH',
+          method: 'PUT',
           href: `${baseUrl}/user/${userId}/email`
-        },
-        { rel: 'logout', method: 'POST', href: `${baseUrl}/logout` }
+        }
       ]
     }
 
     return links
-  }
-
-  /**
-   * Authenticates a user.
-   *
-   * @param {*} req - Express request object.
-   * @param {*} res - Express response object.
-   * @param {*} next - Express next middleware function.
-   * @memberof AccountController
-   */
-  authenticate = async (req, res, next) => {
-    try {
-      const token = req.headers.authorization.split(' ')[1]
-      const privateKey = Buffer.from(process.env.PRIVATE_KEY_64, 'base64').toString('utf-8')
-      const decoded = jwt.verify(token, privateKey)
-      req.user = {
-        id: decoded.id,
-        username: decoded.username
-      }
-      next()
-    } catch (error) {
-      console.error(error)
-      next(createError(401, 'Unauthorized'))
-    }
   }
 
   /**
