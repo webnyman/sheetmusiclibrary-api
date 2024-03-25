@@ -1,5 +1,5 @@
 /**
- * Composer routes.
+ * Library routes.
  *
  * @author Björn Nyman
  * @version 1.0.0
@@ -15,11 +15,14 @@ const controller = new LibraryController()
 
 // Map HTTP verbs and route paths to controller actions.
 
-// Get all composers
+// Get full music library
 router.get('/', (req, res, next) => controller.getLibrary(req, res, next))
 
 // Get one library post
 router.get('/:id', (req, res, next) => controller.getMusic(req, res, next))
+
+// Get all music by composer
+router.get('/composer/:id', (req, res, next) => controller.getMusicByComposer(req, res, next))
 
 // Create library post
 router.post('/', authenticate, (req, res, next) => controller.addMusic(req, res, next))

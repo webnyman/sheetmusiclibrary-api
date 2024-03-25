@@ -46,6 +46,24 @@ export class LibraryController {
   }
 
   /**
+   * Get all music by composer from library database.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   * @returns {Promise<void>} - A Promise that resolves when the login operation is complete.
+   */
+  async getMusicByComposer (req, res, next) {
+    const composerId = req.params.id
+    try {
+      const music = await Library.find({ composer: composerId })
+      res.status(200).json(music)
+    } catch (error) {
+      next(createError(500, 'Server error retrieving music.'))
+    }
+  }
+
+  /**
    * Get one music post from library.
    *
    * @param {object} req - Express request object.
