@@ -25,7 +25,7 @@ router.get('/:id', (req, res, next) => controller.getComposer(req, res, next))
 router.post('/', authenticate, (req, res, next) => controller.addComposer(req, res, next))
 
 // Update composer
-router.put('/:id/update', authenticate, (req, res, next) => controller.updateComposer(req, res, next))
+router.put('/:id', authenticate, (req, res, next) => controller.updateComposer(req, res, next))
 
 // Delete composer
 router.delete('/:id', authenticate, (req, res, next) => controller.deleteComposer(req, res, next))

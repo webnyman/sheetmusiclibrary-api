@@ -1,8 +1,7 @@
 import mongoose from 'mongoose'
-import { Composer } from './composer.model.js'
-import { Category } from './category.model.js'
+import Composer from '../models/composer.model.js'
 
-const sheetMusicSchema = new mongoose.Schema({
+const library = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'Title is required.'],
@@ -13,11 +12,6 @@ const sheetMusicSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Composer',
     required: [true, 'Composer is required.']
-  },
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: [true, 'Category is required.']
   },
   year: {
     type: Number,
@@ -44,11 +38,11 @@ const sheetMusicSchema = new mongoose.Schema({
   }
 })
 
-sheetMusicSchema.virtual('id').get(function () {
+library.virtual('id').get(function () {
   return this._id.toHexString()
 })
 
-sheetMusicSchema.pre('save', async function (next) {
+library.pre('save', async function (next) {
   const validationErrors = []
 
   if (this.composer && mongoose.Types.ObjectId.isValid(this.composer)) {
@@ -59,16 +53,6 @@ sheetMusicSchema.pre('save', async function (next) {
   } else {
     validationErrors.push('Invalid composer reference.')
   }
-
-  if (this.category && mongoose.Types.ObjectId.isValid(this.category)) {
-    const categoryExists = await Category.countDocuments({ _id: this.category }) > 0
-    if (!categoryExists) {
-      validationErrors.push('Referenced category does not exist.')
-    }
-  } else {
-    validationErrors.push('Invalid category reference.')
-  }
-
   if (validationErrors.length > 0) {
     next(new Error(validationErrors.join(' ')))
   } else {
@@ -76,4 +60,4 @@ sheetMusicSchema.pre('save', async function (next) {
   }
 })
 
-export const SheetMusic = mongoose.model('SheetMusic', sheetMusicSchema)
+export default library

@@ -1,10 +1,10 @@
-import Composer from '../../models/composer.model.js'
+import Library from '../../models/library.model.js'
 import createError from 'http-errors'
 
 /**
  * ComposerController
  */
-export class ComposerController {
+export class LibraryController {
   /**
    * Add a new composer to the database.
    *
@@ -13,14 +13,14 @@ export class ComposerController {
    * @param {Function} next - Express next middleware function.
    * @returns {Promise<void>} - A Promise that resolves when the login operation is complete.
    */
-  async addComposer (req, res, next) {
+  async addMusic (req, res, next) {
     try {
-      const composer = new Composer({ ...req.body })
-      await composer.save()
+      const music = new Library({ ...req.body })
+      await music.save()
       res.status(201).json(
         {
-          composer,
-          links: this.#generateHATEOASLinks(composer._id)
+          music,
+          links: this.#generateHATEOASLinks(music._id)
         }
       )
     } catch (error) {
@@ -36,10 +36,10 @@ export class ComposerController {
    * @param {Function} next - Express next middleware function.
    * @returns {Promise<void>} - A Promise that resolves when the login operation is complete.
    */
-  async getAllComposers (req, res, next) {
+  async getLibrary (req, res, next) {
     try {
-      const composers = await Composer.find({})
-      res.status(200).json(composers)
+      const library = await Library.find({})
+      res.status(200).json(library)
     } catch (error) {
       next(createError(500, 'Server error retrieving composers.'))
     }
