@@ -76,19 +76,19 @@ export class LibraryController {
    * @param {Function} next - Express next middleware function.
    * @returns {Promise<void>} - A Promise that resolves when the login operation is complete.
    */
-  async deleteComposer (req, res, next) {
+  async deleteMusic (req, res, next) {
     try {
-      const composer = await Composer.findByIdAndDelete(req.params.id)
+      const composer = await Library.findByIdAndDelete(req.params.id)
       if (!composer) {
-        return next(createError(404, 'Composer not found.'))
+        return next(createError(404, 'Music not found.'))
       }
       return res.status(200).json({
-        message: 'Composer deleted successfully.',
+        message: 'Music deleted successfully.',
         links: [
           {
-            rel: 'all-composers',
+            rel: 'all-library',
             method: 'GET',
-            href: `${process.env.BASE_URL}/composers/`
+            href: `${process.env.BASE_URL}/library/`
           }
         ]
       })
