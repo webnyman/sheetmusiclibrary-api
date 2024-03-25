@@ -82,13 +82,13 @@ export class ComposerController {
       if (!composer) {
         return next(createError(404, 'Composer not found.'))
       }
-      res.status(204).send({
+      return res.status(200).json({
         message: 'Composer deleted successfully.',
         links: [
           {
             rel: 'all-composers',
             method: 'GET',
-            href: '/composers'
+            href: `${process.env.BASE_URL}/composers/`
           }
         ]
       })
