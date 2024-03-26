@@ -33,13 +33,14 @@
     "mongoose": "^7.0.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.21",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "validator": "^13.9.0"
   },
   "eslintConfig": {
     "extends": "@lnu"
   },
   "devDependencies": {
-    "@lnu/eslint-config": "^1.1.10",
     "eslint": "^8.25.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

@@ -5,6 +5,22 @@
  * @version 1.0.0
  */
 
+/**
+ * @swagger
+ * /composers:
+ *   get:
+ *     summary: Returns a list of all composers.
+ *     responses:
+ *       200:
+ *         description: A list of composers.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '/src/schemas/composer.schema.js'
+ */
+
 import express from 'express'
 import { ComposerController } from '../../../controllers/api/composer-controller.js'
 import authenticate from '../../../middleware/authMiddleware.js'

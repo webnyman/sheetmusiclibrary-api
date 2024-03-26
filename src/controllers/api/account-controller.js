@@ -83,6 +83,7 @@ export class AccountController {
 
       res.status(201).json({
         id: user.id,
+        message: 'User registered successfully.',
         links: this.#generateHATEOASLinks(user.id, 'registered')
       })
     } catch (error) {
