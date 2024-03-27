@@ -188,6 +188,9 @@ export class AccountController {
   viewProfile = async (req, res, next) => {
     try {
       req.user = await User.findById(req.params.id)
+      if (!req.user) {
+        return next(createError(404, 'User not found.'))
+      }
       res.status(200).json({
         user: req.user,
         links: this.#generateHATEOASLinks(req.params.id, 'loggedIn')

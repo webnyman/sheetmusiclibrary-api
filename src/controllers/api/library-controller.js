@@ -20,8 +20,19 @@ export class LibraryController {
       const music = new Library({ ...req.body })
       await music.save()
       const activeWebhooks = await Webhook.find({ active: true })
+      if (!activeWebhooks.length) {
+        return res.status(201).json({
+          music,
+          links: this.#generateHATEOASLinks(music._id)
+        })
+      }
+      let musicWithExtraInfo = {
+        event: 'sheetMusicAdded',
+        timestamp: new Date().toISOString(),
+        music
+      };
       const notificationPromises = activeWebhooks.map(webhook => 
-        axios.post(webhook.url, music, {
+        axios.post(webhook.url, musicWithExtraInfo, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${webhook.secretToken}`, // Use if your webhooks use a secret for validation

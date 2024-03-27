@@ -30,5 +30,5 @@ router.post('/', authenticate, (req, res, next) => controller.addMusic(req, res,
 // Update library post
 router.put('/:id', authenticate, (req, res, next) => controller.updateMusic(req, res, next))
 
-// Delete composer
+// Delete music post
 router.delete('/:id', authenticate, (req, res, next) => controller.deleteMusic(req, res, next))

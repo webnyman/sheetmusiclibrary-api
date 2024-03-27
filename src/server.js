@@ -32,12 +32,43 @@ try {
     swaggerDefinition: {
       openapi: '3.0.0',
       info: {
-        title: 'My API',
+        title: 'Sheet music library API',
         version: '1.0.0',
-        description: 'API for my application',
+        description: 'This is an API for a sheet music library. You can create, read, update, and delete composers and music.',
       },
-    },
-    apis: ['./src/routes/api/v1/*.js'], // Adjust this path as needed
+      tags: [
+        { 
+          name: 'Authentication', description: 'API for authentication in the sheet music library'
+        },
+        {
+          name: 'Composers',
+          description: 'API for composers in the sheet music library',
+        },
+        {
+          name: 'Library',
+          description: 'API for music in the sheet music library',
+        },
+        {
+          name: 'Users',
+          description: 'API for users in the sheet music library',
+        },
+        {
+          name: 'Webhook',
+          description: 'API for webhooks in the sheet music library',
+        },
+      ],
+    servers: [
+      {
+        url: '/api/v1',
+        description: 'Development server',
+      },
+      // You can add more servers for different environments
+      {
+        url: 'https://api.example.com',
+        description: 'Production server',
+      }
+    ]},
+    apis: ['./src/routes/api/v1/docs/*.js'], // Adjust this path as needed
   }
 
   const swaggerSpecs = swaggerJsdoc(swaggerOptions);

@@ -13,9 +13,19 @@ import { router as libraryRouter } from './library-router.js'
 import { router as webhookRouter } from './webhook-router.js'
 
 export const router = express.Router()
-router.get('/', (req, res) => res.json({ message: 'Hooray! Welcome to version 1 of this very simple RESTful API! (Sheet Music Library)' }))
+router.get('/', (req, res) => res.json(
+    {
+        message: 'Hooray! Welcome to version 1 of this very simple RESTful API! (Sheet Music Library)',
+        Links: [
+            {   method: 'GET',
+                path: '/api/v1/api-docs',
+                description: 'API documentation'
+            },
+        ]
+    }
+    ))
 router.use('/', mainRouter)
-router.use('/user', accountRouter)
+router.use('/users', accountRouter)
 router.use('/composers', composerRouter)
 router.use('/library', libraryRouter)
 router.use('/webhook', webhookRouter)

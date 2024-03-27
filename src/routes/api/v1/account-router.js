@@ -16,6 +16,7 @@ const controller = new AccountController()
 // Map HTTP verbs and route paths to controller actions.
 
 // View profile
+
 router.get('/:id/profile', authenticate, (req, res, next) => controller.viewProfile(req, res, next))
 
 // Update password

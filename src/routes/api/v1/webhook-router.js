@@ -15,5 +15,5 @@ const controller = new WebhookController()
 
 // Map HTTP verbs and route paths to controller actions.
 
-// View profile
+// Register webhook
 router.post('/register/:id', authenticate, (req, res, next) => controller.register(req, res, next))

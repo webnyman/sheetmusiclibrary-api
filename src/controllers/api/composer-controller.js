@@ -19,6 +19,7 @@ export class ComposerController {
       await composer.save()
       res.status(201).json(
         {
+          message: 'Composer added successfully.',
           composer,
           links: this.#generateHATEOASLinks(composer._id)
         }
