@@ -53,7 +53,7 @@ try {
           description: 'API for users in the sheet music library',
         },
         {
-          name: 'Webhook',
+          name: 'Webhooks',
           description: 'API for webhooks in the sheet music library',
         },
       ],

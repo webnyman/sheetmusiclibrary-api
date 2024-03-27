@@ -22,6 +22,7 @@ export class LibraryController {
       const activeWebhooks = await Webhook.find({ active: true })
       if (!activeWebhooks.length) {
         return res.status(201).json({
+          message: 'Music added successfully.',
           music,
           links: this.#generateHATEOASLinks(music._id)
         })
@@ -166,6 +167,32 @@ export class LibraryController {
       })
     } catch (error) {
       next(error)
+    }
+  }
+
+  /**
+   * Query the database for music by a search term.
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   * @returns {Promise<void>} - A Promise that resolves when the search operation is complete.
+   * @memberof LibraryController
+   * 
+  */
+  async searchMusic (req, res, next) {
+    const title = req.query.title
+    try {
+      // Validate input
+      if (!title) {
+        return res.status(400).json({ message: 'Title query parameter is required.' })
+      }
+      // Perform a case-insensitive search for sheet music by title
+      const results = await Library.find({
+        title: new RegExp(title, 'i'), // Case-insensitive matching
+      })
+      res.status(200).json(results)
+    } catch (error) {
+      next(createError(500, 'Server error retrieving music.'))
     }
   }
 

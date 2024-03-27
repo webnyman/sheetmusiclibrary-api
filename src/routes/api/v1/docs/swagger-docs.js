@@ -612,18 +612,64 @@
 
 /**
  * @swagger
- * /webhook/register/{id}:
+ * /library/search:
+ *   get:
+ *     tags: [Library]
+ *     summary: Search Music Library
+ *     description: Searches the music library for titles matching the query.
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The title to search for in the music library.
+ *     responses:
+ *       200:
+ *         description: Search results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: Unique identifier of the music piece.
+ *                     example: "123e4567-e89b-12d3-a456-426614174000"
+ *                   title:
+ *                     type: string
+ *                     description: Title of the music piece.
+ *                     example: "Fur Elise"
+ *                   composer:
+ *                     type: string
+ *                     description: Composer of the music piece.
+ *                     example: "Ludwig van Beethoven"
+ *                   year:
+ *                     type: integer
+ *                     description: Year the piece was composed.
+ *                     example: 1810
+ *       400:
+ *         description: Bad request (e.g., missing or invalid title query parameter).
+ *       404:
+ *         description: No search results found.
+ */
+
+/**
+ * @swagger
+ * /webhooks/register/{id}:
  *   post:
- *     tags: [Webhook]
+ *     tags: [Webhooks]
  *     summary: Register Webhook
- *     description: Allows users to register a webhook URL for a specific resource identified by ID.
+ *     description: Allows users to register a webhook URL for when music is added to the library.
  *     security:
- *       - bearerAuth: [] # Assumes authentication is required
+ *       - bearerAuth: access_token # Assumes authentication is required
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the resource for which the webhook is being registered.
+ *         description: The ID of the user for which the webhook is being registered.
  *         schema:
  *           type: string
  *     requestBody:
