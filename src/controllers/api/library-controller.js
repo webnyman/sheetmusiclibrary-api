@@ -1,7 +1,7 @@
 import Library from '../../models/library.model.js'
 import { Webhook } from '../../models/webhook.model.js'
 import createError from 'http-errors'
-import axios from 'axios'
+import fetch from 'node-fetch'
 
 /**
  * ComposerController
@@ -33,15 +33,17 @@ export class LibraryController {
         music
       }
       const notificationPromises = activeWebhooks.map(webhook =>
-        axios.post(webhook.url, musicWithExtraInfo, {
+        fetch(webhook.url, {
+          method: 'POST',
+          body: JSON.stringify(musicWithExtraInfo),
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${webhook.secretToken}` // Use if your webhooks use a secret for validation
+            'Content-Type': 'application/json'
           }
-        }).catch(error => {
-          console.log(`Failed to notify webhook at ${webhook.url}:`, error.message)
-          // Optionally log this error to a database or error logging service
         })
+          .catch(error => {
+            console.log(`Failed to notify webhook at ${webhook.url}:`, error)
+          // Optionally log this error to a database or error logging service
+          })
       )
       // Wait for all notifications to be attempted
       await Promise.allSettled(notificationPromises)
