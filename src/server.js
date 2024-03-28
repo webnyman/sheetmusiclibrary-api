@@ -34,39 +34,40 @@ try {
       info: {
         title: 'Sheet music library API',
         version: '1.0.0',
-        description: 'This is an API for a sheet music library. You can create, read, update, and delete composers and music.',
+        description: 'This is an API for a sheet music library. You can create, read, update, and delete composers and music.'
       },
       tags: [
-        { 
+        {
           name: 'Authentication', description: 'API for authentication in the sheet music library'
         },
         {
           name: 'Composers',
-          description: 'API for composers in the sheet music library',
+          description: 'API for composers in the sheet music library'
         },
         {
           name: 'Library',
-          description: 'API for music in the sheet music library',
+          description: 'API for music in the sheet music library'
         },
         {
           name: 'Users',
-          description: 'API for users in the sheet music library',
+          description: 'API for users in the sheet music library'
         },
         {
           name: 'Webhooks',
-          description: 'API for webhooks in the sheet music library',
-        },
+          description: 'API for webhooks in the sheet music library'
+        }
       ],
-    servers: [
-      {
-        url: 'https://swedishbrass.com/1dv027api/api/v1',
-        description: 'Production server',
-      }
-    ]},
-    apis: ['./src/routes/api/v1/docs/*.js'], // Adjust this path as needed
+      servers: [
+        {
+          url: 'https://swedishbrass.com/1dv027api/api/v1',
+          description: 'Production server'
+        }
+      ]
+    },
+    apis: ['./src/routes/api/v1/docs/*.js'] // Adjust this path as needed
   }
 
-  const swaggerSpecs = swaggerJsdoc(swaggerOptions);
+  const swaggerSpecs = swaggerJsdoc(swaggerOptions)
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs))
 
   // Register routes.

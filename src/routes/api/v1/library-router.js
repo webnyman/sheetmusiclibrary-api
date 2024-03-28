@@ -35,4 +35,3 @@ router.delete('/:id', authenticate, (req, res, next) => controller.deleteMusic(r
 
 // Search music library
 router.post('/search', (req, res, next) => controller.searchMusic(req, res, next))
-

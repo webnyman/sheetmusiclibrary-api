@@ -27,17 +27,17 @@ export class LibraryController {
           links: this.#generateHATEOASLinks(music._id)
         })
       }
-      let musicWithExtraInfo = {
+      const musicWithExtraInfo = {
         event: 'sheetMusicAdded',
         timestamp: new Date().toISOString(),
         music
-      };
-      const notificationPromises = activeWebhooks.map(webhook => 
+      }
+      const notificationPromises = activeWebhooks.map(webhook =>
         axios.post(webhook.url, musicWithExtraInfo, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${webhook.secretToken}`, // Use if your webhooks use a secret for validation
-          },
+            Authorization: `Bearer ${webhook.secretToken}` // Use if your webhooks use a secret for validation
+          }
         }).catch(error => {
           console.log(`Failed to notify webhook at ${webhook.url}:`, error.message)
           // Optionally log this error to a database or error logging service
@@ -177,8 +177,7 @@ export class LibraryController {
    * @param {Function} next - Express next middleware function.
    * @returns {Promise<void>} - A Promise that resolves when the search operation is complete.
    * @memberof LibraryController
-   * 
-  */
+   */
   async searchMusic (req, res, next) {
     const title = req.query.title
     try {
@@ -188,7 +187,7 @@ export class LibraryController {
       }
       // Perform a case-insensitive search for sheet music by title
       const results = await Library.find({
-        title: new RegExp(title, 'i'), // Case-insensitive matching
+        title: new RegExp(title, 'i') // Case-insensitive matching
       })
       if (!results.length) {
         return res.status(404).json({ message: 'No music found.' })
