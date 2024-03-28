@@ -13,7 +13,8 @@ https://swedishbrass.com/1dv027api/api/v1
 
 https://gitlab.lnu.se/1dv027/student/bn222eg/assignment-api-design/-/blob/main/postman-collection/Sheet%20music%20library%20API.postman_collection.json
 
-**Endpoint that is not in the collection (due to unknown webhook url):**
+---
+**NOTE: Endpoint that is not in the collection (due to unknown webhook url):**
 
 https://swedishbrass.com/1dv027api/api/v1/webhooks/register/{id}
 
@@ -26,4 +27,6 @@ https://swedishbrass.com/1dv027api/api/v1/webhooks/register/{id}
 {
   "url": "https://example.com/webhook"
 }
+
+---
 
