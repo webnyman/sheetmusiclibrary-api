@@ -59,12 +59,7 @@ try {
       ],
     servers: [
       {
-        url: '/api/v1',
-        description: 'Development server',
-      },
-      // You can add more servers for different environments
-      {
-        url: 'https://api.example.com',
+        url: 'https://swedishbrass.com/1dv027api/api/v1',
         description: 'Production server',
       }
     ]},

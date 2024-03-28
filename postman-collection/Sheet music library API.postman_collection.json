@@ -1,0 +1,989 @@
+{
+	"info": {
+		"_postman_id": "e24fefe5-0fbe-4afd-8235-4c6e06114cd0",
+		"name": "Sheet music library API",
+		"description": "This is a simple API with CRUD-functionality for a database of sheet music.\n\nDocumentation for the api:\n\n[https://swedishbrass.com/1dv027api/api-docs/](https://swedishbrass.com/1dv027api/api-docs/)\n\nStarting endpoint for the api:\n\n[https://swedishbrass.com/1dv027api/api/v1](https://swedishbrass.com/1dv027api/api/v1)\n\n**Endpoint that is not in the collection:**  \n[https://swedishbrass.com/1dv027api/api/v1/webhooks/register/{id}](https://swedishbrass.com/1dv027api/api/v1)\n\n**id**: The ID of the user for which the webhook is being registered.\n\n**Authorization**: Bearer Token\n\n**Body** (json) url to webhook being registered:\n\n``` json\n{\n  \"url\": \"https://example.com/webhook\"\n}\n\n ```",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3246484"
+	},
+	"item": [
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate a random string of a given length\r",
+							"function generateRandomString(length) {\r",
+							"    var text = \"\";\r",
+							"    var possible = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\";\r",
+							"\r",
+							"    for (var i = 0; i < length; i++)\r",
+							"        text += possible.charAt(Math.floor(Math.random() * possible.length));\r",
+							"\r",
+							"    return text;\r",
+							"}\r",
+							"\r",
+							"var password = 'pass_' + Math.random().toString(36).substr(2, 10); // Random string\r",
+							"\r",
+							"// Generate a random username\r",
+							"var username = generateRandomString(8); // Generates an 8 character random string\r",
+							"\r",
+							"// Generate a random email\r",
+							"var email = generateRandomString(5) + \"@example.com\"; // Adjust as needed\r",
+							"\r",
+							"// Set the generated values as environment variables\r",
+							"pm.environment.set(\"username\", username);\r",
+							"pm.environment.set(\"email\", email);\r",
+							"pm.environment.set(\"password\", password);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for successful status code\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"// Test for correct response structure\r",
+							"pm.test(\"Response structure is correct\", function () {\r",
+							"    let responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody).to.have.property('id');\r",
+							"    pm.expect(responseBody).to.have.property('message').that.includes('User registered successfully');\r",
+							"    // Add more structure validation as per your API response\r",
+							"});\r",
+							"\r",
+							"// Optionally, test for specific response header\r",
+							"pm.test(\"Content-Type is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"var responseData = pm.response.json();\r",
+							"var userId = responseData.id; // Adjust this based on your actual response structure\r",
+							"\r",
+							"pm.environment.set(\"userId\", userId); // Saves the user ID as an environment variable named userId\r",
+							" "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"{{email}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/register/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"register",
+						""
+					]
+				},
+				"description": "Registers a new user for the API"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains token\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"access_token\");\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var token = jsonData.access_token; // Adjust this if your token is nested or named differently\r",
+							"pm.environment.set(\"authToken\", token); // Saves the token as an environment variable named authToken\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				},
+				"description": "Logins a existing user"
+			},
+			"response": []
+		},
+		{
+			"name": "view profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test that the response status code is 200 (OK)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test that the response is in JSON format\r",
+							"pm.test(\"Content-Type is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"// Test that the response body contains the user's profile information\r",
+							"pm.test(\"Response contains user profile information\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.user).to.have.property(\"username\");\r",
+							"    pm.expect(jsonData.user).to.have.property(\"email\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/{{userId}}/profile/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{userId}}",
+						"profile",
+						""
+					]
+				},
+				"description": "View the user's profile"
+			},
+			"response": []
+		},
+		{
+			"name": "Update password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test that the response status code is 200 or another expected success code\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test for successful password update message (if your API returns one)\r",
+							"pm.test(\"Password update success message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Password updated successfully.\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"currentPassword\": \"{{password}}\",\r\n    \"newPassword\": \"securepassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/{{userId}}/password/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{userId}}",
+						"password",
+						""
+					]
+				},
+				"description": "Updates the user's password"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all composers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if the response is JSON\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});\r",
+							"pm.test(\"Collection contains composers\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.be.above(0); // Check that there's at least one composer\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each composer has necessary details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach((composer) => {\r",
+							"        pm.expect(composer).to.have.property(\"_id\");\r",
+							"        pm.expect(composer).to.have.property(\"firstName\");\r",
+							"        pm.expect(composer).to.have.property(\"lastName\");\r",
+							"        pm.expect(composer).to.have.property(\"birthYear\");\r",
+							"        // Add any additional checks specific to your application\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/composers/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"composers",
+						""
+					]
+				},
+				"description": "Views all the composers in the databse"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Composer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Arrays of sample first names and last names\r",
+							"const firstNames = [\"Ludwig\", \"Wolfgang\", \"Johann\", \"Franz\", \"Joseph\", \"Antonio\", \"Johannes\", \"Pyotr\", \"Frederic\", \"George\"];\r",
+							"const lastNames = [\"Beethoven\", \"Mozart\", \"Bach\", \"Haydn\", \"Schubert\", \"Vivaldi\", \"Brahms\", \"Tchaikovsky\", \"Chopin\", \"Handel\"];\r",
+							"\r",
+							"// Function to randomly select a name from an array\r",
+							"function getRandomName(nameArray) {\r",
+							"    return nameArray[Math.floor(Math.random() * nameArray.length)];\r",
+							"}\r",
+							"// Function to generate a random birth year within a specified range\r",
+							"function getRandomBirthYear(startYear, endYear) {\r",
+							"    return Math.floor(Math.random() * (endYear - startYear + 1) + startYear);\r",
+							"}\r",
+							"var randomBirthYear = getRandomBirthYear(1650, 1900)\r",
+							"\r",
+							"// Generate random first name and last name\r",
+							"var randomFirstName = getRandomName(firstNames);\r",
+							"var randomLastName = getRandomName(lastNames);\r",
+							"\r",
+							"\r",
+							"// Set the generated names as environment variables\r",
+							"pm.environment.set(\"composerFirstName\", randomFirstName);\r",
+							"pm.environment.set(\"composerLastName\", randomLastName);\r",
+							"pm.environment.set(\"birthYear\", randomBirthYear);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if response header contains 'application/json'\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains necessary composer details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.composer).to.have.property(\"_id\"); // Check if the response has an ID\r",
+							"    pm.expect(jsonData.composer).to.have.property(\"firstName\");\r",
+							"    pm.expect(jsonData.composer).to.have.property(\"lastName\");\r",
+							"    pm.expect(jsonData.composer).to.have.property(\"birthYear\");\r",
+							"});\r",
+							"var responseData = pm.response.json();\r",
+							"var composerId = responseData.composer._id; // Adjust this based on your actual response structure\r",
+							"\r",
+							"pm.environment.set(\"composerId\", composerId); // Saves the composer ID as an environment variable named userId"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\" : \"{{composerFirstName}}\",\r\n    \"lastName\" : \"{{composerLastName}}\",\r\n    \"birthYear\" : {{birthYear}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/composers/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"composers",
+						""
+					]
+				},
+				"description": "Adds a composer to the database"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Composer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test that the status code indicates success (200 OK or 204 No Content are common for updates)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test response is in JSON format\r",
+							"pm.test(\"Content-Type is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"// Test that the birthYear has been updated correctly\r",
+							"pm.test(\"birthYear is updated\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.composer.birthYear).to.eql(1874); // Ensure this matches the year you set in the request\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"birthYear\" : 1874\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/composers/{{composerId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"composers",
+						"{{composerId}}"
+					]
+				},
+				"description": "Updates a composer in the database"
+			},
+			"response": []
+		},
+		{
+			"name": "Get full library",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if the response is JSON\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});\r",
+							"pm.test(\"Collection contains music\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.be.above(0); // Check that there's at least one composer\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each music post has necessary details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach((music) => {\r",
+							"        pm.expect(music).to.have.property(\"_id\");\r",
+							"        pm.expect(music).to.have.property(\"composer\");\r",
+							"        pm.expect(music).to.have.property(\"year\");\r",
+							"        pm.expect(music).to.have.property(\"description\");\r",
+							"        // Add any additional checks specific to your application\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						""
+					]
+				},
+				"description": "Shows the enitre sheet music library"
+			},
+			"response": []
+		},
+		{
+			"name": "Search library by title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if the response is JSON\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});\r",
+							"pm.test(\"Collection contains music\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.be.above(0); // Check that there's at least one composer\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each music post has necessary details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach((music) => {\r",
+							"        pm.expect(music).to.have.property(\"_id\");\r",
+							"        pm.expect(music).to.have.property(\"composer\");\r",
+							"        pm.expect(music).to.have.property(\"year\");\r",
+							"        pm.expect(music).to.have.property(\"description\");\r",
+							"        // Add any additional checks specific to your application\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/search?title=redundant",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						"search"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "redundant"
+						}
+					]
+				},
+				"description": "Shows the enitre sheet music library"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Music to library",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if the response is JSON\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response includes music entry details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.music).to.have.property(\"_id\");\r",
+							"    pm.expect(jsonData.music).to.have.property(\"title\");\r",
+							"    pm.expect(jsonData.music).to.have.property(\"description\");\r",
+							"    // Validate the composer and year if your API returns them in the response\r",
+							"    pm.expect(jsonData.music).to.have.property(\"composer\");\r",
+							"    pm.expect(jsonData.music).to.have.property(\"year\");\r",
+							"});\r",
+							"var responseData = pm.response.json();\r",
+							"var musicId = responseData.music.id; // Adjust this based on your actual response structure\r",
+							"\r",
+							"pm.environment.set(\"musicId\", musicId); // Saves the composer ID as an environment variable named musicId"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"{{$randomAdjective}} {{$randomNoun}}\",\r\n    \"composer\": \"{{composerId}}\",\r\n    \"year\": \"2018\",\r\n    \"description\": \"{{$randomPhrase}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						""
+					]
+				},
+				"description": "Add music to the library"
+			},
+			"response": []
+		},
+		{
+			"name": "Get one library post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if the response is JSON\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each music post has necessary details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData.music).to.have.property(\"_id\");\r",
+							"        pm.expect(jsonData.music).to.have.property(\"composer\");\r",
+							"        pm.expect(jsonData.music).to.have.property(\"year\");\r",
+							"        pm.expect(jsonData.music).to.have.property(\"description\");\r",
+							"        // Add any additional checks specific to your application\r",
+							"    });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/{{musicId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						"{{musicId}}"
+					]
+				},
+				"description": "Shows the enitre sheet music library"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Music in library",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test that the status code indicates success (200 OK or 204 No Content are common for updates)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test response is in JSON format\r",
+							"pm.test(\"Content-Type is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"// Test that the birthYear has been updated correctly\r",
+							"pm.test(\"year is updated\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.music.year).to.eql(2020); // Ensure this matches the year you set in the request\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"year\": \"2020\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/{{musicId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						"{{musicId}}"
+					]
+				},
+				"description": "Updates music in the library"
+			},
+			"response": []
+		},
+		{
+			"name": "Get music by composer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.be.json; // Checks if the response is JSON\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array of music pieces\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/composer/{{composerId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						"composer",
+						"{{composerId}}"
+					]
+				},
+				"description": "Shows all music by one composer"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete music in library",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"// If your API returns a confirmation message, you can test it like so:\r",
+							"pm.test(\"Response includes deletion confirmation\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.include(\"Music deleted successfully\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/library/{{musicId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"library",
+						"{{musicId}}"
+					]
+				},
+				"description": "Deletes music in library"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Composer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"// If your API returns a confirmation message, you can test it like so:\r",
+							"pm.test(\"Response includes deletion confirmation\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.include(\"Composer deleted successfully\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/composers/{{composerId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"composers",
+						"{{composerId}}"
+					]
+				},
+				"description": "Deletes a composer in the database"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "userId",
+			"value": "userId"
+		},
+		{
+			"key": "composerId",
+			"value": "{{composerId}}"
+		}
+	]
+}
