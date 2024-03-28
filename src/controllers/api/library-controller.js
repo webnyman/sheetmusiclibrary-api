@@ -190,7 +190,16 @@ export class LibraryController {
       const results = await Library.find({
         title: new RegExp(title, 'i'), // Case-insensitive matching
       })
-      res.status(200).json(results)
+      if (!results.length) {
+        return res.status(404).json({ message: 'No music found.' })
+      }
+      const resultsWithLinks = results.map(result => {
+        return {
+          music: result,
+          links: this.#generateHATEOASLinks(result.id)
+        }
+      })
+      res.status(200).json(resultsWithLinks)
     } catch (error) {
       next(createError(500, 'Server error retrieving music.'))
     }
