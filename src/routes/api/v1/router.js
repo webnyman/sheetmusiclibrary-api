@@ -19,7 +19,7 @@ router.get('/', (req, res) => res.json(
     Links: [
       {
         method: 'GET',
-        path: '/api/v1/api-docs',
+        path: 'https://swedishbrass.com/1dv027api/api-docs/',
         description: 'API documentation'
       }
     ]

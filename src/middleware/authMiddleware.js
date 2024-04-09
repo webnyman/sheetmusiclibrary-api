@@ -18,6 +18,7 @@ const authenticate = async (req, res, next) => {
       id: decoded.id,
       username: decoded.username
     }
+    res.locals.user = req.user
     next()
   } catch (error) {
     console.error(error)

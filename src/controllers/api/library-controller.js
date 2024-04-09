@@ -37,7 +37,8 @@ export class LibraryController {
           method: 'POST',
           body: JSON.stringify(musicWithExtraInfo),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
           }
         })
           .catch(error => {
